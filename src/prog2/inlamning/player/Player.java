@@ -1,36 +1,38 @@
 package prog2.inlamning.player;
 
+import prog2.inlamning.base.GameObject;
+import prog2.inlamning.game.Game;
 import prog2.inlamning.input.KeyboardHandler;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player {
-	private final int SPEED = 400;
-	private Texture texture;
-	private TextureRegion region;
-	private Vector2 position;
+public class Player extends GameObject{
+
 	private KeyboardHandler inputs;
 	
 	public Player(float x, float y)
 	{
-		texture = new Texture(Gdx.files.internal("data/block.png"));
-		region = new TextureRegion(texture, 0, 0, 50, 50);
-		position = new Vector2(x,y);
+		
+		super(10,10,32,32);
 		inputs = new KeyboardHandler();
 	}
 	
-	public void render(SpriteBatch batch)
+	public void setTexture()
 	{
-		batch.draw(region, position.x, position.y);
+		texture = new Texture(Gdx.files.internal("data/block.png"));
 	}
 	
 	public void update(float delta)
 	{
 		inputs.update();
+		
+		oldPosition.x = position.x;
+		oldPosition.y = position.y;
 		
 		if(inputs.isLeft())
 		{
@@ -56,5 +58,9 @@ public class Player {
 			position.y -= SPEED * delta;
 		}
 		
+		collisionTest();
+		
 	}
+
+	
 }

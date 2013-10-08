@@ -1,5 +1,7 @@
 package prog2.inlamning.game;
 
+import prog2.inlamning.base.GameObject;
+import prog2.inlamning.enemies.Enemy;
 import prog2.inlamning.player.Player;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -12,16 +14,20 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 public class Game implements ApplicationListener {
 	private SpriteBatch batch;
-	private Texture texture;
-	private TextureRegion region;
+
 	
 	private Player player;
 	
-	private int x;
-	private int y;
+	private static Array<GameObject> gameObjects;
+	
+	public static Array<GameObject> getGameObjects()
+	{
+		return gameObjects;
+	}
 	
 	@Override
 	public void create() {		
@@ -31,6 +37,9 @@ public class Game implements ApplicationListener {
 		//texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		//region = new TextureRegion(texture, 0, 0, 50, 50);
 		
+		gameObjects = new Array<GameObject>();
+		gameObjects.add(player);
+		gameObjects.add(new Enemy(90,90));
 		//x = 10;
 		//y = 40;
 	}
@@ -38,17 +47,27 @@ public class Game implements ApplicationListener {
 	@Override
 	public void dispose() {
 		batch.dispose();
-		texture.dispose();
+	
 	}
 
 	@Override
 	public void render() {		
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		player.update(Gdx.graphics.getDeltaTime());
+		//player.update(Gdx.graphics.getDeltaTime());
+		
+		for(int i = 0;i<gameObjects.size;i++)
+		{
+			gameObjects.get(i).update(Gdx.graphics.getDeltaTime());
+		}
+		
 		batch.begin();
-		player.render(batch);
+		//player.render(batch);
 		//batch.draw(region, x, y);
+		for(GameObject go : gameObjects)
+		{
+		go.render(batch);	
+		}
 		batch.end();
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
